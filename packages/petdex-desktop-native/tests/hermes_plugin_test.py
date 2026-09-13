@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Behavioral oracles for the embedded Hermes lifecycle plugin.
 
-A hook event that cannot be attributed to a real conversation must not open a
-card. A card with no title is indistinguishable from internal machinery and
-surfaces as a phantom: bubble text (whatever tool ran last) with no title row,
-persisting until the runtime prunes it. The plugin therefore requires a title,
-or the prompt that is about to seed one, before it forwards an event.
+A hook event that cannot be attributed to a session at all must not open a
+card: with no title and no prompt there is nothing to label it with, and it
+renders as a blank-title card (bubble text only) indistinguishable from
+internal machinery. A conversation that has a row but no generated title yet
+is labelled with its session id instead of deferring.
 """
 
 from __future__ import annotations
@@ -92,13 +92,13 @@ class HermesPluginCardGuardTests(unittest.TestCase):
         self.assertEqual(len(events), 1, "a titled session must render its card")
         self.assertEqual(events[0]["petdex_session_title"], "Fix the tail")
 
-    def test_a_tool_event_without_a_title_is_deferred(self) -> None:
-        # The phantom shape: a row exists but carries no title, so the card
-        # would render as bare tool text with no title row.
-        self.assertEqual(
-            self.emit("post", {"session_id": "untitled", "tool_name": "process_manage"}),
-            [],
-        )
+    def test_a_tool_event_for_an_untitled_session_is_labelled_with_its_id(self) -> None:
+        # A real conversation whose generated title has not landed yet still
+        # gets its card, labelled with the session id, so the blank title row
+        # that made these cards unidentifiable is never rendered.
+        events = self.emit("post", {"session_id": "untitled", "tool_name": "process_manage"})
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0]["petdex_session_title"], "untitled")
 
     def test_an_unresolvable_session_is_deferred(self) -> None:
         self.assertEqual(
@@ -110,8 +110,9 @@ class HermesPluginCardGuardTests(unittest.TestCase):
         self.assertEqual(self.emit("post", {"tool_name": "process_manage"}), [])
 
     def test_the_first_prompt_opens_a_card_without_a_stored_title(self) -> None:
-        # A real conversation seeds its title from the prompt, so deferring on
-        # the titleless tool event costs it nothing: the prompt opens the card.
+        # A conversation with no stored title opens its card on the prompt; the
+        # unreadable-session case below is the only input where the prompt
+        # branch decides on its own.
         events = self.emit("user-prompt", {"session_id": "untitled", "user_message": "hello"})
         self.assertEqual(len(events), 1, "the first prompt must open the card")
 

@@ -189,6 +189,9 @@ def _session_context(
         (row.get("title", "") for row in reversed(chain) if row.get("title")),
         "",
     )
+    # Hermes titles a session in the background, so a row can exist before its
+    # title lands; the session id keeps the card from rendering blank.
+    title = title or root.get("id", "")
     marker_parent = _delegate_parent(first)
     kind = "subagent" if force_subagent or _source_marks_subagent(first) else "primary"
     parent = first.get("parent_session_id", "") or marker_parent or force_parent
@@ -236,9 +239,8 @@ def _callback(phase: str):
             # delegated work instead of opening one top-level card per worker.
             if context["kind"] == "subagent" and not is_subagent_lifecycle:
                 return
-            # A card needs a title: the state.db title, or the prompt the
-            # runner remembers from the session's first turn. With neither the
-            # card is unattributable — defer, since the first prompt opens it.
+            # An unreadable row yields no title and no prompt to seed one, so a
+            # card here would carry only the last tool text.
             prompt_text = str(payload.get("user_message") or payload.get("prompt") or "")
             if not context["title"] and not prompt_text.strip():
                 return

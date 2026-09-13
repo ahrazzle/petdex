@@ -236,6 +236,12 @@ def _callback(phase: str):
             # delegated work instead of opening one top-level card per worker.
             if context["kind"] == "subagent" and not is_subagent_lifecycle:
                 return
+            # A card needs a title: the state.db title, or the prompt the
+            # runner remembers from the session's first turn. With neither the
+            # card is unattributable — defer, since the first prompt opens it.
+            prompt_text = str(payload.get("user_message") or payload.get("prompt") or "")
+            if not context["title"] and not prompt_text.strip():
+                return
             if context["title"]:
                 # Namespaced so a tool argument named `title` cannot be
                 # mistaken for a server-side session rename by the runner.

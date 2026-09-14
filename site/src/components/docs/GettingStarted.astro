@@ -43,7 +43,7 @@ const flagTable: [string, string][] = [
 const envTable: [string, string][] = [
   [
     'HERMES_HOME',
-    'the target Hermes home. Inside a named profile it is <home>/.hermes/profiles/<name>; unset, it is ~/.hermes.',
+    'the target Hermes home: <home>/.hermes/profiles/<name> inside a named profile, ~/.hermes when unset.',
   ],
   ['TAMAHERMES_HOME', 'overrides HERMES_HOME for the hook script and the plugin.'],
   ['TAMAHERMES_PETDEX_HOME', 'the desktop home to mirror into. Unset means no desktop mirror.'],
@@ -81,31 +81,28 @@ const pathTable: [string, string][] = [
   <section class="docs-section" id="install">
     <h3>Install the pet</h3>
     <p>
-      EvoPet is the pet and the desktop shell, and they install separately. You can run the pet
-      alone, in the terminal, with no desktop app at all. From a checkout of the pet tree:
+      The pet and the desktop shell install separately, and the pet runs alone in the terminal. From
+      a checkout of the pet tree:
     </p>
     <CopyCommand id="docs-install-pet" code={petInstall} label="Copy the install" />
     <div class="note">
       <span class="note-title">Before you start</span>
       <p>
-        EvoPet's own repository is public as of 11 September 2026, and the pet tree is a separate
-        tree, so these instructions assume a checkout on your machine. The pet needs Python and
-        nothing else — its only dependency is Pillow, which already ships with Hermes.
+        EvoPet's repository is public as of 11 September 2026, and the pet tree is separate, so
+        these instructions assume a checkout on your machine. The pet needs Python and nothing else:
+        Pillow already ships with Hermes.
       </p>
     </div>
-    <p>
-      That one command installs the package, builds the pet into your Hermes home, copies the
-      plugin, and selects the pet.
-    </p>
+
   </section>
 
   <section class="docs-section" id="enable">
     <h3>Enable the plugin</h3>
     <p>
-      The plugin is how growth events reach the ledger. It is a native Hermes plugin, so it runs
-      in process, nothing needs allowlisting, and hook callbacks only enqueue a payload — the
-      atlas rebuild is coalesced, so a burst of tool calls triggers one rebuild rather than forty.
-      A failed rebuild is logged and dropped, because a mascot must never break an agent turn.
+      The plugin is how growth events reach the ledger. It is native, so it runs in process and needs
+      no allowlisting; hook callbacks only enqueue a payload, and rebuilds are coalesced, so a burst
+      of tool calls is one rebuild, not forty. A failed rebuild is logged and dropped: a mascot must
+      never break an agent turn.
     </p>
     <p>
       The alternative is shell hooks: put the block from{' '}
@@ -119,8 +116,7 @@ const pathTable: [string, string][] = [
   <section class="docs-section" id="select">
     <h3><code>pets select</code></h3>
     <p>
-      Selecting the pet is what makes it the active one for that profile, and it happens once per
-      install:
+      Selecting the pet makes it the active one for that profile. It happens once per install:
     </p>
     <CopyCommand id="docs-enable-select" code={enableSelect} label="Copy the three commands" />
   </section>
@@ -128,10 +124,9 @@ const pathTable: [string, string][] = [
   <section class="docs-section" id="doctor">
     <h3><code>pets doctor</code></h3>
     <p>
-      <code>hermes pets doctor</code> is the check, and it should report the pet ready. If it does
-      not, start with the two things that go wrong most: the plugin was copied but never enabled,
-      or the install was pointed at a home whose <code>config.yaml</code> still uses the legacy
-      bare-list <code>plugins:</code> form.
+      <code>hermes pets doctor</code> is the check and should report the pet ready. If it does not,
+      look at the two common causes: the plugin was copied but never enabled, or the home's
+      <code>config.yaml</code> still uses the legacy bare-list <code>plugins:</code> form.
     </p>
   </section>
 
@@ -140,14 +135,12 @@ const pathTable: [string, string][] = [
     <p>
       Hermes homes are profile-scoped: the pets directory is <code>&lt;HERMES_HOME&gt;/pets</code>,
       and <code>HERMES_HOME</code> is <code>&lt;home&gt;/.hermes/profiles/&lt;name&gt;</code>
-      inside a named profile (unset — that is, <code>~/.hermes</code> — for the default profile).
-      So each profile owns its own pet and its own ledger, and you install once per profile you
-      actually use.
+      in a named profile (unset, that is <code>~/.hermes</code>, for the default). Each profile owns
+      its own pet and ledger, so install once per profile you use.
     </p>
     <p>
-      Pointing an install at a non-live home, which is what tests and staging do, installs the pet
-      but deliberately does not run <code>hermes pets select</code>, so it cannot change the
-      config of the profile you are actually running.
+      An install pointed at a non-live home (tests, staging) installs the pet but deliberately skips
+      <code>hermes pets select</code>, so it cannot change the config of the profile you are running.
     </p>
   </section>
 
@@ -155,8 +148,8 @@ const pathTable: [string, string][] = [
     <h3><code>install-all-profiles.sh</code></h3>
     <p>
       One command covers the default profile and every named profile on the machine. It also takes{' '}
-      <code>--only name1,name2</code> and <code>--keep-selection</code> (install the pet without
-      changing which pet is active).
+      <code>--only name1,name2</code>, and <code>--keep-selection</code> to install the pet without
+      changing which pet is active.
     </p>
     <CopyCommand id="docs-all-profiles" code={allProfiles} label="Copy the commands" />
   </section>
@@ -186,28 +179,24 @@ const pathTable: [string, string][] = [
     <h3>Float it on the desktop</h3>
     <p>
       The pet renders in the terminal by default. Mirroring it into the desktop shell's pet
-      directory makes it float there too, off the same ledger:
+      directory makes it float there too, off the same ledger.
     </p>
     <CopyCommand id="docs-desktop" code={desktopMirror} label="Copy the commands" />
     <div class="note note--warn">
       <span class="note-title">Close the desktop app first</span>
       <p>
         The app rewrites its settings file from memory when it quits, so an activate pass against a
-        running app is clobbered. Only <code>--petdex-activate</code> touches which pet is on
-        screen, and it preserves every other key of that file, including their order.
+        running app is clobbered. Only <code>--petdex-activate</code> changes which pet is on
+        screen, and it preserves that file's other keys, in order.
       </p>
     </div>
     <p>
       The mirror is a copy, not a second pet. Once the opt-in marker is recorded at{' '}
       <code>&lt;HERMES_HOME&gt;/tamahermes/petdex-home</code>, every growth refresh re-mirrors the
-      sheet, so the floating pet evolves with the terminal one instead of freezing at whatever it
-      looked like on install day.
-    </p>
-    <p>
-      One honest caveat: the desktop pet is machine-wide while growth ledgers are per-profile, so
-      an unmanaged mirror shows whichever profile last changed. Installing from every profile is
-      what keeps it current from all of them, and the combined ledger is what makes the ambiguity
-      go away.
+      sheet, so the floating pet evolves with the terminal one instead of freezing at install day.
+      It is machine-wide while ledgers are per-profile, so an unmanaged mirror shows whichever
+      profile last changed; installing from every profile, plus the combined ledger, keeps it
+      honest.
     </p>
   </section>
 
@@ -257,37 +246,36 @@ const pathTable: [string, string][] = [
       </table>
     </div>
     <p>
-      Only numbers are stored: XP, counters, stats and traits — never your prompts, never tool
-      output, never a file path. The combined ledger's restriction is enforced by its own test
-      rather than by convention.
+      Only numbers are stored: XP, counters, stats and traits. Never your prompts, never tool output,
+      never a file path, and the combined ledger's restriction is enforced by its own test, not by
+      convention.
     </p>
   </section>
 
   <section class="docs-section" id="shell">
     <h3>The desktop shell</h3>
     <p>
-      The shell is the app that floats the pet and taps every agent's hook payload, so Claude Code,
-      Codex, opencode and Gemini CLI can feed the same creature. It is a Zig build with a pinned
-      SDK, and today it is a <strong>local build</strong>: there is no notarized download, and a
-      bundle built on one Mac is rejected by Gatekeeper on any other.
+      The shell floats the pet and taps every agent's hook payload, so Claude Code, Codex, opencode
+      and Gemini CLI can feed the same creature. It is a Zig build with a pinned SDK, and today a
+      <strong>local build</strong>: there is no notarized download, and a bundle built on one Mac is
+      rejected by Gatekeeper on any other.
     </p>
     <p>
-      Because of that, the honest install path for the shell right now is to build it from the app
-      tree on the machine that will run it. It installs as its own app, leaving the stock one in
-      place so you can revert by quitting and reopening the other.
+      The shell's install path right now is to build it from the app tree on the machine that will
+      run it, as its own app, leaving the stock one in place so you can revert by quitting and
+      reopening the other.
     </p>
     <p>
-      The shell half descends from <strong>Petdex</strong>, the desktop app shell lineage. An
-      earlier repository published as <code>{LEGACY_SHELL_REPO}</code> is that lineage's older
-      home; this site links the lineage as Petdex, and the older mirror is named here as prose
-      rather than offered as a second button.
+      The shell half descends from <strong>Petdex</strong>; an earlier repository published as{' '}
+      <code>{LEGACY_SHELL_REPO}</code> is that lineage's older home, named here as prose rather than
+      linked.
     </p>
     <div class="note">
       <span class="note-title">If hooks look dead</span>
       <p>
-        The shell exits 0 by design when its hook server fails to bind — for example because another
-        petdex is already running — and then keeps running with every hook silently doing nothing.
-        Check the hook server's <code>/health</code> first.
+        The shell exits 0 by design when its hook server fails to bind (another petdex already
+        running, for example) and then keeps running with every hook silently doing nothing. Check
+        the hook server's <code>/health</code> first.
       </p>
     </div>
   </section>

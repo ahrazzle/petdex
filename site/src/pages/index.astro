@@ -31,7 +31,7 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
 
 <BaseLayout
   title="EvoPet: one pet that grows from all of your agent work"
-  description="EvoPet is a pixel-art desktop companion that earns XP from real agent turns across every profile and every agent you run, and evolves on a ladder of 99 levels."
+  description="A pixel-art desktop companion that earns XP from real agent turns in every profile and every agent you run, and evolves through 99 levels."
   suffix={false}
 >
   <section class="hero">
@@ -42,9 +42,9 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
         <p class="eyebrow">A pixel-art companion for real work</p>
         <h1>One pet. Every session. Every agent.</h1>
         <p class="lede">
-          EvoPet is a pixel-art creature that lives on your desktop and in your agent's terminal,
-          and grows from the work you actually do. It is <strong>one pet</strong>: every session,
-          in every profile, across every agent you run, feeds the same creature.
+          EvoPet lives on your desktop and in your agent's terminal, and grows from the work you
+          actually do. It is <strong>one pet</strong>: every session, in every profile, across every
+          agent you run, feeds the same creature.
         </p>
         {/* §5: two CTAs (the five-button row was the hero's main defect), then
             the four repository links on their own rule below. */}
@@ -88,30 +88,29 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
     <section class="section tint--amber">
       <h2>Two halves, one creature</h2>
       <p class="prose">
-        EvoPet is a fork of a pet project and a fork of a desktop app, joined at one idea. They
-        are separate trees with separate jobs, and both are needed for the thing to exist. The pet
-        half descends from TamaCodex by way of TamaHermes, which continues on its own; the shell
-        half descends from Petdex.
+        EvoPet joins two forks: a pet project and a desktop app. Separate trees, separate jobs,
+        both needed. The pet half descends from TamaCodex by way of TamaHermes, which continues on
+        its own; the shell half descends from Petdex.
       </p>
       <div class="grid">
         <div class="card">
           <h3>The pet</h3>
           <p>
-            The mechanics. It owns XP, the level ladder, the stats, the life stages and evolution,
-            and it draws the sprite atlas: a grid of 192&times;208 cells, 8 columns by 9 rows,
+            The mechanics: XP, the level ladder, the stats, the life stages and evolution, and it
+            draws the sprite atlas, a grid of 192&times;208 cells, 8 columns by 9 rows,
             1536&times;1872 in all. Python.
           </p>
           <p>
             Every surface renders that one atlas, so the terminal pet, the desktop pet and the
-            preview are the same creature and cannot drift apart.
+            preview cannot drift apart.
           </p>
         </div>
         <div class="card">
           <h3>The desktop shell</h3>
           <p>
-            The app that floats the creature above your other windows and gives it a HUD. It also
-            taps the hook payload every hooked agent sends, so the ledger sees Claude Code, Codex,
-            opencode and Gemini CLI as well as Hermes.
+        The app that floats the creature above your other windows and gives it a HUD. It also taps
+        the hook payload every hooked agent sends, so the ledger counts Claude Code, Codex, opencode
+        and Gemini CLI alongside Hermes.
           </p>
           <p>
             Growth events are read at turn boundaries only. A turn in one agent is worth a turn in
@@ -124,16 +123,14 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
     <section class="section tint--mint">
       <h2>One pet, not nine</h2>
       <p class="prose">
-        This is the idea the whole project exists for, and it is worth stating plainly: you do not
-        get a pet per tool. Profiles, group chats and agents are all sources, and they add up in
-        one place.
+        You do not get a pet per tool. Profiles, group chats and agents are all sources, and they add
+        up in one place.
       </p>
       <p class="prose">
-        There are two routes into the combined ledger, and each source is counted on exactly one
-        of them. Hermes turns arrive from the per-profile ledgers, which know the details the
-        plugin can see. Foreign agents arrive from a spool file the desktop shell writes as their
-        events pass through it. A Hermes event seen on the spool is ignored, because the profile
-        ledger already counted it.
+        Two routes lead into the combined ledger, each source counted on exactly one. Hermes turns
+        arrive from the per-profile ledgers, which see what the plugin sees; foreign agents arrive
+        from a spool file the desktop shell writes as their events pass through. A Hermes event on
+        the spool is ignored: the profile ledger already counted it.
       </p>
       <div class="diagram-scroll">
         <svg
@@ -189,9 +186,9 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
         </svg>
       </div>
       <p class="prose">
-        Because the desktop mirror is one pet shown machine-wide, exactly one writer owns it: the
-        drain that renders it from the combined ledger. A per-profile build that tries to write
-        that same mirror is refused, by name, rather than silently fighting over it.
+        The desktop mirror is one pet shown machine-wide, so exactly one writer owns it: the drain
+        that renders it from the combined ledger. A per-profile build that writes it is refused by
+        name, rather than silently fighting over the mirror.
       </p>
     </section>
 
@@ -234,8 +231,8 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
     <section class="section tint--sky">
       <h2>The ladder: 99 levels, 100,000 XP</h2>
       <p class="prose">
-        Every pet climbs the same curve, so a level means the same amount of work in every package.
-        It is cheap at the start and long at the end:
+        Every pet climbs the same curve, so a level means the same work in every package. Cheap at
+        the start, long at the end:
         <code>xp_for_level(L) = round(100_000 &times; ((L &minus; 1) &divide; 98) &sup2;)</code>.
         The first level costs 10 XP, which one prompt and one success covers with room to spare.
       </p>
@@ -256,28 +253,54 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
         }
       </ul>
       <p class="prose">
-        Those are the default pet's evolution gates. A gate is a level your pet reaches, and when
-        it does, it changes form. The numbers above are the levels and the XP that opens each one.
-        Fifty thousand XP, half the cap, lands inside level 70.
+        Those are the default pet's evolution gates: the level your pet reaches, and the XP that
+        opens it. Fifty thousand XP, half the cap, lands inside level 70.
       </p>
     </section>
 
+    <section class="section tint--sky">
+      <h2>A quiet HUD that stays live</h2>
+      <p class="prose">
+        The macOS desktop companion keeps a small floating panel beside the pet. Its XP bar measures
+        progress inside the current level, and the level number is derived from that same XP value, so
+        the two cannot drift after a turn or care action. The panel refreshes when the ledger changes;
+        restarting the app is not required.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Actions without a menu</h3>
+          <p>
+            Care, feed, clean, play and bed are available as compact floating buttons. Each action
+            writes to the shared ledger, awards the defined XP, updates the pet's metrics, and redraws
+            the installed package.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Readable at a glance</h3>
+          <p>
+            The panel groups the relevant state in one restrained grid: health, energy, mood, bond,
+            satiety, mess, focus, resilience, restlessness, alert state, level and XP progress. It is
+            information-dense, not screen-filling.
+          </p>
+        </div>
+      </div>
+    </section>
     <section class="section tint--rose">
       <h2>Evolution is the creator's call</h2>
       <p class="prose">
         EvoPet fixes the ladder. How many times a pet changes form, and at which levels, is
-        declared by whoever made it, in the package's own manifest:
+        declared by its creator, in the package's own manifest:
       </p>
       <pre><code>{gateSnippet}</code></pre>
       <p class="prose">
-        One to four gates, strictly increasing, one more form than gates: so between two and five
-        forms. Names are positional and not yours to choose, starting at <code>egg</code> and
-        running <code>hatchling</code>, <code>child</code>, <code>teen</code>,
-        <code>adult</code>. Three gates and your pet never reaches adult.
+        One to four gates, strictly increasing, one more form than gates: two to five forms. Names
+        are positional, not yours to choose: <code>egg</code>, <code>hatchling</code>,
+        <code>child</code>, <code>teen</code>, <code>adult</code>. Three gates and your pet never
+        reaches adult.
       </p>
       <p class="prose">
-        The gates are checked against the art the pet actually ships, at install, while the
-        mistake is still fixable. You cannot declare five forms for a line that has two.
+        At install, gates are checked against the art the pet ships, while the mistake is still
+        fixable: you cannot declare five forms for a line that has two.
       </p>
       <p class="prose">
         <a href="/docs#gates">Evolution stages and gates</a> has the full contract, including
@@ -310,27 +333,22 @@ const gateSnippet = '"evopet": { "evolutionGates": [11, 23, 32, 45] }';
         </table>
       </div>
       <p class="prose">
-        A good turn is about 18 XP, and a failing turn about 9 to 11. Telling a pet to work harder
-        than that is not a setting; there is no cap on the ladder and no way to buy a level.
+        A good turn is about 18 XP, a failing turn 9 to 11. There is no setting to earn faster and no
+        way to buy a level.
       </p>
     </section>
 
     <section class="section tint--amber">
       <h2>Where things stand</h2>
-      <p class="prose">
-        Said plainly, because the rest of this site is documentation and documentation should not
-        shade the truth:
-      </p>
       <ul class="prose">
         <li>The pet's mechanics, the combined ledger and the drain that fills it are in the pet tree.</li>
         <li>
-          The desktop shell runs as a local build on macOS. A notarized download does not exist
-          yet, so there is nothing to install on a machine that did not build it.
+          The desktop shell runs as a local build on macOS; there is no notarized download yet, so
+          nothing installs on a machine that did not build it.
         </li>
         <li>
-          The library service is written and passes its own end-to-end round trip, but it is not
-          deployed. The library page here will say it cannot reach the library, and that is the
-          honest answer rather than an empty list.
+          The library service is written and passes its end-to-end round trip, but it is not
+          deployed, so the library page says it cannot reach the library.
         </li>
         <li>EvoPet's own repository is public as of 11 September 2026.</li>
       </ul>
